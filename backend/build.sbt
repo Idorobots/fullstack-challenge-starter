@@ -34,5 +34,10 @@ wartremoverErrors in Test ++= Warts.allBut(Wart.NonUnitStatements)
 coverageMinimum := 90
 coverageFailOnMinimum := false // FIXME Set to true
 
+enablePlugins(JavaAppPackaging)
+dockerUpdateLatest := true
+mappings in Universal ++= DockerSettings.additionalMappings
+dockerCommands := DockerSettings.dockerCommands("obstacle-course")
+
 addCommandAlias("clean-compile", ";clean;scalastyle;compile")
 addCommandAlias("clean-test", ";clean;scalastyle;test:scalastyle;coverage;test;coverageReport")
