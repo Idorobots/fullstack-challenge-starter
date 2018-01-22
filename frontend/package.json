@@ -10,7 +10,8 @@
     "build:release": "ENV=prod gulp",
     "test": "ENV=test gulp test",
     "test:ci": "ENV=test gulp test-ci",
-    "test:watch": "ENV=test gulp test-watch"
+    "test:watch": "ENV=test gulp test-watch",
+    "package" : "npm run build:release && docker build -f docker/Dockerfile -t obstacle-course-fe ."
   },
   "author": "k@idorobots.org",
   "license": "MIT",
