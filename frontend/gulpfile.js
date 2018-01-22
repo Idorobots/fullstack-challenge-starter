@@ -102,6 +102,14 @@ gulp.task("style-type-definitions", (done) => {
   });
 });
 
+gulp.task("config", () => {
+  gulp
+    .src(["src/config.js"])
+    .on("error", gutil.log)
+    .pipe(gulp.dest("./dist/"))
+    .pipe(connect.reload());
+});
+
 gulp.task("html", () => {
   gulp
     .src(["src/index.html"])
@@ -119,11 +127,11 @@ gulp.task("server", () => {
   });
 });
 
-gulp.task("watch", ["html", "bundle", "server"], () => {
-  gulp.watch("src/**/*.*", { debounceDelay: 2000 }, ["html", "bundle"]);
+gulp.task("watch", ["html", "config", "bundle", "server"], () => {
+  gulp.watch("src/**/*.*", { debounceDelay: 2000 }, ["html", "config", "bundle"]);
 });
 
-gulp.task("default", ["html", "bundle"]);
+gulp.task("default", ["html", "config", "bundle"]);
 
 gulp.task("test", ["style-type-definitions"], (done) => {
   new karmaServer({

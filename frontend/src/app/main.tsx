@@ -2,19 +2,18 @@ import * as preact from "preact";
 import { MainContainer } from "./containers/main/mainContainer";
 import { mainStore } from "./store/main";
 
-export function onLoad() {
-  console.log("App successfully loaded!");
+type Config = {
+  backendUrl: string
+};
+
+export function onLoad(config: Config) {
+  console.log("App successfully loaded!", config);
   const container = document.createElement("div");
   document.body.appendChild(container);
   preact.render(<MainContainer store={mainStore}/>, container);
 }
 
+// Install the app entry point.
 (function () {
-  const DOMContentLoaded = document.readyState === "interactive";
-
-  if (DOMContentLoaded) {
-    onLoad();
-  } else {
-    document.addEventListener("DOMContentLoaded", onLoad);
-  }
+  (window as any).startApp = onLoad;
 })();
