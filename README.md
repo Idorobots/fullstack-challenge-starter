@@ -3,7 +3,7 @@
 A full-stack-ish technical challenge for a company.
 
 ## Backend part
-To run the included tests (hopefuly I wrote some ¯\_(ツ)_/¯) run either of the following commands:
+To run the included tests (hopefuly I wrote some ¯\\\_(ツ)\_/¯) run either of the following commands:
 
 ```
 sbt clean-test
