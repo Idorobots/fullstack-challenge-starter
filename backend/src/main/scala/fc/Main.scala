@@ -1,4 +1,4 @@
-package oc
+package fc
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -22,12 +22,12 @@ object Main {
     }
 
   def main(args: Array[String]): Unit = {
-    implicit val system: ActorSystem = ActorSystem("obstacle-course")
+    implicit val system: ActorSystem = ActorSystem("fullstack-challenge")
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val executionContext: ExecutionContext = system.dispatcher
 
     val _ = Http().bindAndHandle(routes, Config.Rest.host, Config.Rest.port).map { _ =>
-      system.log.info(s"Obstacle-course backend started successfully on ${Config.Rest.host}:${Config.Rest.port}!")
+      system.log.info(s"Fullstack challenge backend started successfully on ${Config.Rest.host}:${Config.Rest.port}!")
     }
   }
 

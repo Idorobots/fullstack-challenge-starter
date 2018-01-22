@@ -1,4 +1,5 @@
-# obstacle-course-solver
+# Fullstack Challenge
+
 A full-stack-ish technical challenge for a company.
 
 ## Backend part
@@ -19,7 +20,7 @@ Ensure that the Docker daemon is up an running in order to create an image. The 
 
 ```
 sbt run
-docker run -p 8081:1234 -e REST_HOST=0.0.0.0 -e REST_PORT=1234 -e LOG_LEVEL=DEBUG obstacle-course-be:latest
+docker run -p 8081:1234 -e REST_HOST=0.0.0.0 -e REST_PORT=1234 -e LOG_LEVEL=DEBUG fullstack-challenge-be:latest
 ```
 
 ## Frontend part
@@ -48,7 +49,9 @@ npm run package
 To run the project after building the image simply execute:
 
 ```
-docker run -p 8080:80 -e BACKEND_URL="localhost:8081" obstacle-course-fe:latest
+docker run -p 8080:80 -e BACKEND_URL="localhost:8081" fullstack-challenge-fe:latest
 ```
 
-Alternatively, you can start a static file server inside of the `dist` directory instead of building a Docker image for the frontend.
+(Alternatively, you can start a static file server inside of the `dist` directory instead of building a Docker image for the frontend.)
+
+Once everything is set up, you can browse `localhost:8080` for the challenge submition.

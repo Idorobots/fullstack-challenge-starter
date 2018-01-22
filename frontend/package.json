@@ -1,7 +1,7 @@
 {
-  "name": "obstacle-course-fe",
+  "name": "fullstack-challenge-fe",
   "version": "0.0.1",
-  "description": "Obstacle course frontend.",
+  "description": "Fullstack challenge frontend.",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf coverage dist node_modules package-lock.json",
@@ -11,7 +11,7 @@
     "test": "ENV=test gulp test",
     "test:ci": "ENV=test gulp test-ci",
     "test:watch": "ENV=test gulp test-watch",
-    "package" : "npm run build:release && docker build -f docker/Dockerfile -t obstacle-course-fe ."
+    "package" : "npm run build:release && docker build -f docker/Dockerfile -t fullstack-challenge-fe ."
   },
   "author": "k@idorobots.org",
   "license": "MIT",

@@ -1,4 +1,4 @@
-name := "obstacle-course-be"
+name := "fullstack-challenge-be"
 version := "0.0.1"
 scalaVersion := "2.12.4"
 
@@ -37,7 +37,7 @@ coverageFailOnMinimum := false // FIXME Set to true
 enablePlugins(JavaAppPackaging)
 dockerUpdateLatest := true
 mappings in Universal ++= DockerSettings.additionalMappings
-dockerCommands := DockerSettings.dockerCommands("obstacle-course-be")
+dockerCommands := DockerSettings.dockerCommands("fullstack-challenge-be")
 
 addCommandAlias("clean-compile", ";clean;scalastyle;compile")
 addCommandAlias("clean-test", ";clean;scalastyle;test:scalastyle;coverage;test;coverageReport")
