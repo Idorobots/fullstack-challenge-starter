@@ -1,4 +1,7 @@
-export const duckWrapper: string;
-export const visible: string;
-export const hidden: string;
-export const duck: string;
+declare const styles: {
+  readonly "duckWrapper": string;
+  readonly "visible": string;
+  readonly "hidden": string;
+  readonly "duck": string;
+};
+export = styles;

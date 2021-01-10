@@ -1,4 +1,4 @@
-import { observer } from "mobx-observer";
+import { observer } from "mobx-preact";
 import * as preact from "preact";
 import * as styles from "./duckContainer.css";
 

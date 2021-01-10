@@ -16,7 +16,7 @@ sbt clean-compile
 sbt docker:publishLocal
 ```
 
-Ensure that the Docker daemon is up an running in order to create an image. The image will be based on `phusion:basebox` so it'll download a bit of crap on the first run. To then run the backend execute either command:
+Ensure that the Docker daemon is up an running in order to create an image. The image will be based on `openjdk:8` so it'll download a bit of crap on the first run. To then run the backend execute either command:
 
 ```
 sbt run

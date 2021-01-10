@@ -10,5 +10,5 @@ object Response {
   def OK(json: String): HttpResponse =
     HttpResponse(StatusCodes.OK, entity = HttpEntity(`application/json`, json))
 
-  val NotFound = HttpResponse(StatusCodes.NotFound)
+  val NotFound: HttpResponse = HttpResponse(StatusCodes.NotFound)
 }

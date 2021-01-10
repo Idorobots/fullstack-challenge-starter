@@ -3,7 +3,7 @@
 const browserify = require("browserify");
 const buffer = require("vinyl-buffer");
 const connect = require("gulp-connect");
-const DtsCreator = require("typed-css-modules");
+const DtsCreator = require("typed-css-modules").default;
 const glob = require("glob");
 const gulp = require("gulp");
 const gutil = require("gulp-util");
@@ -17,23 +17,66 @@ const uglify = require("gulp-uglify");
 const postcss = [ // order matters
   require("postcss-cssnext"),
   require("postcss-custom-properties"),
-  require("postcss-import"),
+  //require("postcss-import"), // FIXME
   require("postcss-color-function"),
   require("postcss-assets")({
     loadPaths: ["src/"]
   }),
   require("postcss-camel-case"),
-  require("postcss-modules-local-by-default"),
+  //require("postcss-modules-local-by-default"), // FIXME
 ];
 
 module.exports = {
   postcss
 };
 
-gulp.task("bundle", ["style-type-definitions", "lint"], () => {
+gulp.task("style-type-definitions", (done) => {
+  let creator = new DtsCreator({
+    camelCase: true,
+    searchDir: "./src"
+  });
+  glob("./src/**/*.css", null, (err, files) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    if (!files || !files.length) return;
+    Promise
+      .all(files.map((f) => {
+        return creator
+          .create(f)
+          .then((content) => {
+            console.log("Writing " + gutil.colors.green(content.outputFilePath));
+            if(!!content.messageList) {
+              content.messageList.forEach((message) => {
+                console.warn(gutil.colors.yellow("[Warn] " + message));
+              });
+            }
+            content.writeFile()
+          })
+          .catch((reason) => console.error(gutil.colors.red("[Error] " + reason)));
+      }))
+      .then(() => done());
+  });
+});
+
+gulp.task("tslint", () => {
+  return gulp
+    .src(["src/**/*.ts", "src/**/*.tsx"])
+    .on("error", gutil.log)
+    .pipe(tslint({
+      fix: true,
+      formatter: "verbose",
+    }))
+    .pipe(tslint.report());
+});
+
+gulp.task("lint", gulp.series("tslint"));
+
+gulp.task("bundle", gulp.series(gulp.parallel("style-type-definitions", "lint"), () => {
   const prod = process.env.ENV === "prod";
   if (prod){
-    postcss.push(require('postcss-clean'));
+    postcss.push(require("cssnano"));
   }
   const bundle = browserify("src/app/main.tsx", { debug: !prod })
     .plugin(require("tsify"))
@@ -56,54 +99,14 @@ gulp.task("bundle", ["style-type-definitions", "lint"], () => {
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(sourcemaps.write());
   }
-  bundle
+  return bundle
     .pipe(gulp.dest("./dist/"))
     .pipe(connect.reload());
-});
+}));
 
-gulp.task("tslint", () => {
-  gulp
-    .src(["src/**/*.ts", "src/**/*.tsx"])
-    .on("error", gutil.log)
-    .pipe(tslint({
-      fix: true,
-      formatter: "verbose",
-    }))
-    .pipe(tslint.report());
-});
-
-gulp.task("lint", ["tslint"]);
-
-gulp.task("style-type-definitions", (done) => {
-  let creator = new DtsCreator({
-    camelCase: true,
-    searchDir: "./src"
-  });
-  glob("./src/**/*.css", null, (err, files) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    if (!files || !files.length) return;
-    Promise
-      .all(files.map((f) => {
-        return creator
-          .create(f)
-          .then((content) => content.writeFile())
-          .then((content) => {
-            console.log("Wrote " + gutil.colors.green(content.outputFilePath));
-            content.messageList.forEach((message) => {
-              console.warn(gutil.colors.yellow("[Warn] " + message));
-            });
-          })
-          .catch((reason) => console.error(gutil.colors.red("[Error] " + reason)));
-      }))
-      .then(() => done());
-  });
-});
 
 gulp.task("config", () => {
-  gulp
+  return gulp
     .src(["src/config.js"])
     .on("error", gutil.log)
     .pipe(gulp.dest("./dist/"))
@@ -111,7 +114,7 @@ gulp.task("config", () => {
 });
 
 gulp.task("html", () => {
-  gulp
+  return gulp
     .src(["src/index.html"])
     .on("error", gutil.log)
     .pipe(gulp.dest("./dist/"))
@@ -127,29 +130,29 @@ gulp.task("server", () => {
   });
 });
 
-gulp.task("watch", ["html", "config", "bundle", "server"], () => {
-  gulp.watch("src/**/*.*", { debounceDelay: 2000 }, ["html", "config", "bundle"]);
-});
+gulp.task("watch", gulp.series(gulp.parallel("html", "config", "bundle", "server"), () => {
+  return gulp.watch("src/**/*.*", { debounceDelay: 2000 }, ["html", "config", "bundle"]);
+}));
 
-gulp.task("default", ["html", "config", "bundle"]);
+gulp.task("default", gulp.parallel("html", "config", "bundle"));
 
-gulp.task("test", ["style-type-definitions"], (done) => {
+gulp.task("test", gulp.series("style-type-definitions", (done) => {
   new karmaServer({
     configFile: __dirname + "/karma.conf.js",
     singleRun: true,
   }, done).start();
-});
+}));
 
-gulp.task("test-ci", ["style-type-definitions"], (done) => {
+gulp.task("test-ci", gulp.series("style-type-definitions", (done) => {
   new karmaServer({
     configFile: __dirname + "/karma.conf.js",
     singleRun: true,
     browsers: ["HeadlessChrome"],
   }, done).start();
-});
+}));
 
-gulp.task("test-watch", ["style-type-definitions"], (done) => {
+gulp.task("test-watch", gulp.series("style-type-definitions", (done) => {
   new karmaServer({
     configFile: __dirname + "/karma.conf.js",
   }, done).start();
-});
+}));

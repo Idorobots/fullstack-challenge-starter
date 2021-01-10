@@ -1,2 +1,5 @@
-export const mainWrapper: string;
-export const mainButton: string;
+declare const styles: {
+  readonly "mainWrapper": string;
+  readonly "mainButton": string;
+};
+export = styles;

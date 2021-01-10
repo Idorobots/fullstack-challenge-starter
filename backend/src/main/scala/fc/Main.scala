@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ExceptionHandler, RejectionHandler, Route}
-import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 
 import scala.concurrent.ExecutionContext
@@ -23,11 +22,12 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("fullstack-challenge")
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val executionContext: ExecutionContext = system.dispatcher
 
-    val _ = Http().bindAndHandle(routes, Config.Rest.host, Config.Rest.port).map { _ =>
-      system.log.info(s"Fullstack challenge backend started successfully on ${Config.Rest.host}:${Config.Rest.port}!")
+    val _ = Http().newServerAt(Config.Rest.host, Config.Rest.port).bind(routes).map { _ =>
+      system.log.info(
+        s"Fullstack challenge backend started successfully on ${Config.Rest.host}:${Config.Rest.port.toString}!"
+      )
     }
   }
 

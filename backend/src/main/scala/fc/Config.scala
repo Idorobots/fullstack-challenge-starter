@@ -7,8 +7,8 @@ object Config {
   private val config = ConfigFactory.load()
 
   object Rest {
-    val host = config.getString("fc.rest.host")
-    val port = config.getInt("fc.rest.port")
+    val host: String = config.getString("fc.rest.host")
+    val port: Int = config.getInt("fc.rest.port")
   }
 
 }
